@@ -4,13 +4,13 @@ using TMPro;
 using UnityEngine;
 namespace KevinCastejon.MultiplayerAPIExplorer
 {
-    public class InGameConsole : MonoBehaviour
+    public class ConsolePanel : MonoBehaviour
     {
-        private static InGameConsole _instance;
+        private static ConsolePanel _instance;
         [SerializeField] private bool _forwardToRealConsole;
         private TMP_InputField _textField;
 
-        public static InGameConsole Instance { get => _instance; }
+        public static ConsolePanel Instance { get => _instance; }
 
         private void Awake()
         {

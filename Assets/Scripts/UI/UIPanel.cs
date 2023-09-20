@@ -27,15 +27,15 @@ namespace KevinCastejon.MultiplayerAPIExplorer
         }
         protected void Log(string message)
         {
-            InGameConsole.Instance.Log(message);
+            ConsolePanel.Instance.Log(message);
         }
         protected void LogError(string message)
         {
-            InGameConsole.Instance.LogError(message);
+            ConsolePanel.Instance.LogError(message);
         }
         protected void LogException(System.Exception e)
         {
-            InGameConsole.Instance.LogException(e);
+            ConsolePanel.Instance.LogException(e);
         }
     }
 }

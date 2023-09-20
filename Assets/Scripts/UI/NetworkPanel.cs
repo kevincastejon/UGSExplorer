@@ -218,10 +218,22 @@ namespace KevinCastejon.MultiplayerAPIExplorer
         {
             NetworkManager.Singleton.OnClientStarted -= OnClientStarted;
             NetworkManager.Singleton.OnTransportFailure -= OnClientStartFailed;
+            NetworkManager.Singleton.OnTransportFailure += OnClientTransportFailure;
             NetworkManager.Singleton.OnClientStopped += OnClientStopped;
             NetworkManager.Singleton.OnClientConnectedCallback += OnConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback += OnDisconnected;
             Log("Client started.");
+        }
+
+        private void OnClientTransportFailure()
+        {
+            NetworkManager.Singleton.OnTransportFailure -= OnClientTransportFailure;
+            NetworkManager.Singleton.OnClientStopped -= OnClientStopped;
+            NetworkManager.Singleton.OnClientConnectedCallback -= OnConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback -= OnDisconnected;
+            _authGroup.interactable = true;
+            StopWait();
+            Log("Transport failure.");
         }
 
         private void OnConnected(ulong obj)
@@ -238,10 +250,12 @@ namespace KevinCastejon.MultiplayerAPIExplorer
 
         private void OnClientStopped(bool obj)
         {
+            NetworkManager.Singleton.OnTransportFailure -= OnClientTransportFailure;
             NetworkManager.Singleton.OnClientStopped -= OnClientStopped;
             NetworkManager.Singleton.OnClientConnectedCallback -= OnConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback -= OnDisconnected;
             _authGroup.interactable = true;
+            StopWait();
             Log((obj ? "Host" : "Client") + " stopped.");
         }
         private void DisconnectClient()
