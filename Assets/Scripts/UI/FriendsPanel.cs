@@ -371,7 +371,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
 
         private string MemberToString(Member member)
         {
-            return "Member:[ID:" + member.Id + " Profile:" + member.Profile.Name + " Availability:" + member.Presence.Availability + " LastSeen" + (member.Presence.LastSeen - DateTime.Now).Hours + "h]";
+            return "Member:[ID:" + member.Id + " Profile:" + member.Profile.Name +"]";
         }
     }
 }
