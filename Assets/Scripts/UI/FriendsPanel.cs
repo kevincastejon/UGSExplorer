@@ -139,7 +139,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             Log("Relationships :");
             foreach (Relationship relation in FriendsService.Instance.Relationships)
             {
-                Log("    - ID:" + relation.Id + "    Type:" + relation.Type + MemberToString(relation.Member));
+                Log("    - ID:" + relation.Id + "    Type:" + relation.Type +"    "+ MemberToString(relation.Member));
             }
         }
 
