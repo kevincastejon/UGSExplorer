@@ -149,7 +149,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             Log("Friends :");
             foreach (Relationship relation in FriendsService.Instance.Friends)
             {
-                Log("    - ID:" + relation.Id + MemberToString(relation.Member));
+                Log("    - ID:" + relation.Id + "    " + MemberToString(relation.Member));
             }
         }
 
@@ -158,7 +158,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             Log("Incoming Requests :");
             foreach (Relationship relation in FriendsService.Instance.IncomingFriendRequests)
             {
-                Log("    - ID:" + relation.Id + MemberToString(relation.Member));
+                Log("    - ID:" + relation.Id +"    "+ MemberToString(relation.Member));
             }
         }
 
@@ -167,7 +167,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             Log("Outgoing Requests :");
             foreach (Relationship relation in FriendsService.Instance.OutgoingFriendRequests)
             {
-                Log("    - ID:" + relation.Id + MemberToString(relation.Member));
+                Log("    - ID:" + relation.Id +"    "+ MemberToString(relation.Member));
             }
         }
 
@@ -176,7 +176,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             Log("Blocked members :");
             foreach (Relationship relation in FriendsService.Instance.Blocks)
             {
-                Log("    - ID:" + relation.Id + MemberToString(relation.Member));
+                Log("    - ID:" + relation.Id +"    "+ MemberToString(relation.Member));
             }
         }
 
