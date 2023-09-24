@@ -9,6 +9,11 @@ namespace KevinCastejon.MultiplayerAPIExplorer
         private Camera _camera;
         private SpriteRenderer _sprite;
         private NetworkVariable<Color> _color = new(Color.white);
+        private NetworkVariable<bool> _serverAuthoritativeMovement = new(false);
+        private NetworkVariable<Vector2> _clientPosition = new(Vector2.zero);
+
+        public NetworkVariable<bool> ServerAuthoritativeMovement { get => _serverAuthoritativeMovement; }
+
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -16,6 +21,11 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             {
                 _color.Value = Random.ColorHSV(0, 1, 0, 1, 0, 1, 1, 1);
                 _sprite.color = _color.Value;
+                _serverAuthoritativeMovement.Value = NetworkPanel.Instance.AuthoritativeMovements;
+                if (_serverAuthoritativeMovement.Value)
+                {
+                    _clientPosition.OnValueChanged += (Vector2 prev, Vector2 next) => transform.position = next;
+                }
             }
             else
             {
@@ -30,10 +40,25 @@ namespace KevinCastejon.MultiplayerAPIExplorer
         }
         private void Update()
         {
+            if (_serverAuthoritativeMovement.Value)
+            {
+                if (IsOwner)
+                {
+                    Vector2 mouseWorldPos = _camera.ScreenToWorldPoint(Input.mousePosition);
+                    _clientPosition.Value = new Vector2(Mathf.Clamp(mouseWorldPos.x, -5f, 5f), Mathf.Clamp(mouseWorldPos.y, -5f, 5f));
+                }
+            }
+            else
+            {
+                if (IsOwner)
+                {
+                    Vector2 mouseWorldPos = _camera.ScreenToWorldPoint(Input.mousePosition);
+                    transform.position = new Vector2(Mathf.Clamp(mouseWorldPos.x, -5f, 5f), Mathf.Clamp(mouseWorldPos.y, -5f, 5f));
+                }
+            }
+
             if (IsOwner)
             {
-                Vector2 mouseWorldPos = _camera.ScreenToWorldPoint(Input.mousePosition);
-                transform.position = new Vector2(Mathf.Clamp(mouseWorldPos.x, -5f, 5f), Mathf.Clamp(mouseWorldPos.y, -5f, 5f));
                 if (Input.GetMouseButtonDown(0))
                 {
                     ShootServerRpc(transform.position);

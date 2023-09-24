@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using Unity.Services.Authentication;
+using Unity.Services.CloudCode;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
@@ -105,7 +106,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             Lobby lobby;
             try
             {
-               lobby = await LobbyService.Instance.CreateLobbyAsync(_createLobbyNameInput.text, 4, new CreateLobbyOptions() { Player = new Player(null, _createRelayCodeInput.text.Length > 0 ? _createRelayCodeInput.text : null, null, _createAllocIDInput.text.Length > 0 ? _createAllocIDInput.text : null, default, default, new PlayerProfile(AuthenticationService.Instance.Profile)) });
+                lobby = await LobbyService.Instance.CreateLobbyAsync(_createLobbyNameInput.text, 4, new CreateLobbyOptions() { Player = new Player(null, _createRelayCodeInput.text.Length > 0 ? _createRelayCodeInput.text : null, null, _createAllocIDInput.text.Length > 0 ? _createAllocIDInput.text : null, default, default, new PlayerProfile(AuthenticationService.Instance.PlayerName)) });
             }
             catch (Exception e)
             {
@@ -143,7 +144,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
         private async void UpdateLobby()
         {
             StartWait();
-            Log("Updating lobby..."); 
+            Log("Updating lobby...");
             Lobby lobby;
             try
             {
@@ -160,7 +161,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
                 StopWait();
             }
             Log("Lobby updated.");
-            LogLobby(lobby);
+            LogLobby(lobby); 
         }
         private void Delete()
         {
@@ -225,7 +226,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
                 StopWait();
             }
             Log("Lobby fetched.");
-            LogLobby(lobby);    
+            LogLobby(lobby);
         }
         private async void QuickJoin()
         {
@@ -234,7 +235,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             Lobby lobby;
             try
             {
-                lobby = await LobbyService.Instance.QuickJoinLobbyAsync(new QuickJoinLobbyOptions() { Filter = _quickJoinNameInput.text.Length == 0 ? null : new List<QueryFilter>() { new QueryFilter(QueryFilter.FieldOptions.Name, _quickJoinNameInput.text, QueryFilter.OpOptions.CONTAINS) }, Player = new Player(null, _quickJoinRelayCodeInput.text.Length > 0 ? _quickJoinRelayCodeInput.text : null, null, _quickJoinAllocIDInput.text.Length > 0 ? _quickJoinAllocIDInput.text : null, default, default, new PlayerProfile(AuthenticationService.Instance.Profile)) });
+                lobby = await LobbyService.Instance.QuickJoinLobbyAsync(new QuickJoinLobbyOptions() { Filter = _quickJoinNameInput.text.Length == 0 ? null : new List<QueryFilter>() { new QueryFilter(QueryFilter.FieldOptions.Name, _quickJoinNameInput.text, QueryFilter.OpOptions.CONTAINS) }, Player = new Player(null, _quickJoinRelayCodeInput.text.Length > 0 ? _quickJoinRelayCodeInput.text : null, null, _quickJoinAllocIDInput.text.Length > 0 ? _quickJoinAllocIDInput.text : null, default, default, new PlayerProfile(AuthenticationService.Instance.PlayerName)) });
             }
             catch (Exception e)
             {
@@ -256,7 +257,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             Lobby lobby;
             try
             {
-                lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(_joinByCodeCodeInput.text, new JoinLobbyByCodeOptions() { Player = new Player(null, _joinByCodeRelayCodeInput.text.Length > 0 ? _joinByCodeRelayCodeInput.text : null, null, _joinByCodeAllocIDInput.text.Length > 0 ? _joinByCodeAllocIDInput.text : null, default, default, new PlayerProfile(AuthenticationService.Instance.Profile)) });
+                lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(_joinByCodeCodeInput.text, new JoinLobbyByCodeOptions() { Player = new Player(null, _joinByCodeRelayCodeInput.text.Length > 0 ? _joinByCodeRelayCodeInput.text : null, null, _joinByCodeAllocIDInput.text.Length > 0 ? _joinByCodeAllocIDInput.text : null, default, default, new PlayerProfile(AuthenticationService.Instance.PlayerName)) });
             }
             catch (Exception e)
             {
@@ -278,7 +279,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             Lobby lobby;
             try
             {
-                lobby = await LobbyService.Instance.JoinLobbyByIdAsync(_joinByIDIDInput.text, new JoinLobbyByIdOptions() { Player = new Player(null, _joinByIDRelayCodeInput.text.Length > 0 ? _joinByIDRelayCodeInput.text : null, null, _joinByIDAllocIDInput.text.Length > 0 ? _joinByIDAllocIDInput.text : null, default, default, new PlayerProfile(AuthenticationService.Instance.Profile)) });
+                lobby = await LobbyService.Instance.JoinLobbyByIdAsync(_joinByIDIDInput.text, new JoinLobbyByIdOptions() { Player = new Player(null, _joinByIDRelayCodeInput.text.Length > 0 ? _joinByIDRelayCodeInput.text : null, null, _joinByIDAllocIDInput.text.Length > 0 ? _joinByIDAllocIDInput.text : null, default, default, new PlayerProfile(AuthenticationService.Instance.PlayerName)) });
             }
             catch (Exception e)
             {
@@ -384,7 +385,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             Log("");
             foreach (Player player in lobby.Players)
             {
-                Log("    Player " + player.Id + "    Relay code : " + player.ConnectionInfo);
+                Log("    Player " + player.Id + "    Relay code : " + (player.ConnectionInfo != null ? player.ConnectionInfo : "NONE") + "    Name : " + (player.Profile != null ? player.Profile.Name : "NONE"));
             }
             Log("-------------------------------------");
         }

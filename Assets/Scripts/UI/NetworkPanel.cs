@@ -24,8 +24,8 @@ namespace KevinCastejon.MultiplayerAPIExplorer
 
         private static NetworkPanel _instance;
         public static NetworkPanel Instance { get => _instance; }
-        public bool AuthoritativeMovements { get => _authoritativeMovements.isOn; set => _authoritativeMovements.isOn = value; }
-        public bool AuthoritativeBullets { get => _authoritativeBullets.isOn; set => _authoritativeBullets.isOn = value; }
+        public bool AuthoritativeMovements { get => _authoritativeMovements.isOn; }
+        public bool AuthoritativeBullets { get => _authoritativeBullets.isOn; }
 
         protected override void Awake()
         {
