@@ -22,7 +22,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             _expandBar.onClick.AddListener(Expand);
             _collapseBar.onClick.AddListener(Collapse);
         }
-        private void Expand()
+        public void Expand()
         {
             _content.SetActive(true);
             _expandBar.gameObject.SetActive(false);
@@ -31,7 +31,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
         }
 
-        private void Collapse()
+        public void Collapse()
         {
             _content.SetActive(false);
             _expandBar.gameObject.SetActive(true);

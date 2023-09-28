@@ -20,6 +20,11 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
             yield return new WaitForSeconds(0.1f);
             LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
+            UIPanel[] panels = FindObjectsByType<UIPanel>(FindObjectsSortMode.None);
+            foreach (UIPanel p in panels)
+            {
+                p.Collapse();
+            }
         }
     }
 }

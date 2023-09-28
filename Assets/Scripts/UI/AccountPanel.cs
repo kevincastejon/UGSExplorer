@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using TMPro;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
@@ -63,9 +64,10 @@ namespace KevinCastejon.MultiplayerAPIExplorer
         {
             StartWait();
             Log("Refreshing player info...");
+            PlayerInfo pi;
             try
             {
-                await AuthenticationService.Instance.GetPlayerInfoAsync();
+                pi = await AuthenticationService.Instance.GetPlayerInfoAsync();
             }
             catch (Exception e)
             {
@@ -77,8 +79,8 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             {
                 StopWait();
             }
-            _playerIDLabel.text = AuthenticationService.Instance.PlayerInfo.Id;
-            _playerLinkLabel.text = AuthenticationService.Instance.PlayerInfo.Identities.Count > 0 ? "YES" : "NO";
+            _playerIDLabel.text = pi.Id;
+            _playerLinkLabel.text = pi.Identities.Count > 0 ? "YES" : "NO";
             Log("Player info refreshed.");
         }
 
