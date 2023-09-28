@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
+
 namespace KevinCastejon.MultiplayerAPIExplorer
 {
     public class PlayerController : NetworkBehaviour
@@ -10,9 +12,11 @@ namespace KevinCastejon.MultiplayerAPIExplorer
         private SpriteRenderer _sprite;
         private NetworkVariable<Color> _color = new(Color.white);
         private NetworkVariable<bool> _serverAuthoritativeMovement = new(false);
-        private NetworkVariable<Vector2> _clientPosition = new(Vector2.zero);
+        private NetworkVariable<bool> _serverAuthoritativeShooting = new(false);
+        private NetworkVariable<Vector2> _clientPosition = new(Vector2.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         public NetworkVariable<bool> ServerAuthoritativeMovement { get => _serverAuthoritativeMovement; }
+        public NetworkVariable<Color> PlayerColor { get => _color; }
 
         public override void OnNetworkSpawn()
         {
@@ -30,8 +34,8 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             else
             {
                 _sprite.color = _color.Value;
-                _color.OnValueChanged += (Color prev, Color next) => _sprite.color = next;
             }
+            _color.OnValueChanged += (Color prev, Color next) => _sprite.color = next;
         }
         private void Awake()
         {
@@ -40,39 +44,59 @@ namespace KevinCastejon.MultiplayerAPIExplorer
         }
         private void Update()
         {
+            if (!IsOwner) { return; }
             if (_serverAuthoritativeMovement.Value)
             {
-                if (IsOwner)
+                Vector2 mouseWorldPos = _camera.ScreenToWorldPoint(Input.mousePosition);
+                _clientPosition.Value = new Vector2(Mathf.Clamp(mouseWorldPos.x, -5f, 5f), Mathf.Clamp(mouseWorldPos.y, -5f, 5f));
+            }
+            else
+            {
+                Vector2 mouseWorldPos = _camera.ScreenToWorldPoint(Input.mousePosition);
+                transform.position = new Vector2(Mathf.Clamp(mouseWorldPos.x, -5f, 5f), Mathf.Clamp(mouseWorldPos.y, -5f, 5f));
+            }
+            if (_serverAuthoritativeShooting.Value)
+            {
+                if (Input.GetMouseButtonUp(0))
                 {
-                    Vector2 mouseWorldPos = _camera.ScreenToWorldPoint(Input.mousePosition);
-                    _clientPosition.Value = new Vector2(Mathf.Clamp(mouseWorldPos.x, -5f, 5f), Mathf.Clamp(mouseWorldPos.y, -5f, 5f));
+                    ShootServerRpc();
                 }
             }
             else
             {
-                if (IsOwner)
+                if (Input.GetMouseButtonUp(0))
                 {
-                    Vector2 mouseWorldPos = _camera.ScreenToWorldPoint(Input.mousePosition);
-                    transform.position = new Vector2(Mathf.Clamp(mouseWorldPos.x, -5f, 5f), Mathf.Clamp(mouseWorldPos.y, -5f, 5f));
-                }
-            }
-
-            if (IsOwner)
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    ShootServerRpc(transform.position);
+                    RaycastHit2D hit = Physics2D.GetRayIntersection(new Ray(new Vector3(transform.position.x, transform.position.y, -10f), Vector3.forward * 20f));
+                    if (hit.collider && hit.collider.CompareTag("Mobs"))
+                    {
+                        // TO DO SOME PREDICTION HERE...
+                        KillMobServerRpc(hit.collider.GetComponent<NetworkObject>().NetworkObjectId);
+                    }
                 }
             }
         }
         [ServerRpc]
-        public void ShootServerRpc(Vector2 pos)
+        public void ShootServerRpc()
         {
-            RaycastHit2D hit = Physics2D.GetRayIntersection(new Ray(new Vector3(pos.x, pos.y, -10f), Vector3.forward * 20f));
+            if (!_serverAuthoritativeShooting.Value)
+            {
+                return;
+            }
+            RaycastHit2D hit = Physics2D.GetRayIntersection(new Ray(new Vector3(transform.position.x, transform.position.y, -10f), Vector3.forward * 20f));
             if (hit && hit.collider.CompareTag("Mobs"))
             {
                 Destroy(hit.collider.gameObject);
             }
+        }
+        [ServerRpc]
+        public void KillMobServerRpc(ulong mobId)
+        {
+            if (_serverAuthoritativeShooting.Value)
+            {
+                return;
+            }
+
+            Destroy(NetworkManager.Singleton.SpawnManager.SpawnedObjects[mobId].gameObject);
         }
         private void FixedUpdate()
         {

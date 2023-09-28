@@ -13,6 +13,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
 
         protected override void Awake()
         {
+            base.Awake();
             _controller = GetComponent<PlayerController>();
         }
         /// <summary>

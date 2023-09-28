@@ -11,6 +11,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
 {
     public class NetworkPanel : UIPanel
     {
+        [SerializeField] private PlayerController _playerPrefab;
         [SerializeField] private Button _startServerBtn;
         [SerializeField] private Button _startHostBtn;
         [SerializeField] private Button _startClientBtn;
@@ -36,13 +37,32 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             _startClientBtn.onClick.AddListener(StartClient);
             _disconnectClientBtn.onClick.AddListener(DisconnectClient);
             _shutdownBtn.onClick.AddListener(Shutdown);
-            //_authoritativeMovements.onValueChanged.AddListener((bool value) => GameManager.authoritativeMovements.Value = value);
+            _authoritativeMovements.onValueChanged.AddListener((bool value) =>
+            {
+                if (NetworkManager.Singleton.IsServer)
+                {
+                    foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
+                    {
+                        if (client.ClientId == NetworkManager.Singleton.LocalClientId)
+                        {
+                            continue;
+                        }
+                        Vector2 pos = client.PlayerObject.transform.position;
+                        Color col = client.PlayerObject.GetComponent<PlayerController>().PlayerColor.Value;
+                        Destroy(client.PlayerObject.gameObject);
+                        PlayerController refreshedPlayerObject = Instantiate(_playerPrefab);
+                        refreshedPlayerObject.transform.position = pos;
+                        refreshedPlayerObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(client.ClientId);
+                        refreshedPlayerObject.PlayerColor.Value = col;
+                    }
+                }
+            });
             //_authoritativeBullets.onValueChanged.AddListener((bool value) => GameManager.authoritativeBullets.Value = value);
         }
 
         private void StartServer()
         {
-            _authGroup.interactable = false;
+            //_authGroup.interactable = false;
             StartWait();
             Log("Starting server...");
             NetworkManager.Singleton.OnServerStarted += OnServerStarted;
@@ -58,7 +78,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
                 NetworkManager.Singleton.OnTransportFailure -= OnServerStartFailed;
                 LogException(e);
                 Log("Starting server failed.");
-                _authGroup.interactable = true;
+                //_authGroup.interactable = true;
                 StopWait();
                 return;
             }
@@ -67,7 +87,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
                 NetworkManager.Singleton.OnServerStarted -= OnServerStarted;
                 NetworkManager.Singleton.OnTransportFailure -= OnServerStartFailed;
                 Log("Starting server failed.");
-                _authGroup.interactable = true;
+                //_authGroup.interactable = true;
                 StopWait();
             }
         }
@@ -77,7 +97,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             NetworkManager.Singleton.OnServerStarted -= OnServerStarted;
             NetworkManager.Singleton.OnTransportFailure -= OnServerStartFailed;
             StopWait();
-            _authGroup.interactable = true;
+            //_authGroup.interactable = true;
             Log("Starting server failed.");
         }
 
@@ -88,13 +108,13 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             NetworkManager.Singleton.OnServerStopped += OnServerStopped;
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
-            StopWait();
             GameManager.Instance.enabled = true;
+            StopWait();
             Log("Server started.");
         }
         private void StartHost()
         {
-            _authGroup.interactable = false;
+            //_authGroup.interactable = false;
             StartWait();
             Log("Starting host...");
             NetworkManager.Singleton.OnServerStarted += OnHostStarted;
@@ -110,7 +130,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
                 NetworkManager.Singleton.OnTransportFailure -= OnHostStartFailed;
                 LogException(e);
                 Log("Starting host failed.");
-                _authGroup.interactable = true;
+                //_authGroup.interactable = true;
                 StopWait();
                 return;
             }
@@ -119,7 +139,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
                 NetworkManager.Singleton.OnServerStarted -= OnHostStarted;
                 NetworkManager.Singleton.OnTransportFailure -= OnHostStartFailed;
                 Log("Starting host failed.");
-                _authGroup.interactable = true;
+                //_authGroup.interactable = true;
                 StopWait();
             }
         }
@@ -128,7 +148,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
         {
             NetworkManager.Singleton.OnServerStarted -= OnHostStarted;
             NetworkManager.Singleton.OnTransportFailure -= OnHostStartFailed;
-            _authGroup.interactable = true;
+            //_authGroup.interactable = true;
             StopWait();
             Log("Starting host failed.");
         }
@@ -165,11 +185,10 @@ namespace KevinCastejon.MultiplayerAPIExplorer
 
         private void OnServerStopped(bool obj)
         {
-            GameManager.Instance.enabled = false;
             NetworkManager.Singleton.OnServerStopped -= OnServerStopped;
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
-            _authGroup.interactable = true;
+            //_authGroup.interactable = true;
             Log((obj ? "Host" : "Server") + " stopped.");
         }
 
