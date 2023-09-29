@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
+using Unity.Networking.Transport.Relay;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +14,14 @@ namespace KevinCastejon.MultiplayerAPIExplorer
     public class NetworkPanel : UIPanel
     {
         [SerializeField] private PlayerController _playerPrefab;
+        [SerializeField] private TMP_InputField _IPInput;
+        [SerializeField] private TMP_InputField _IPListenInput;
+        [SerializeField] private TMP_InputField _portInput;
+        [SerializeField] private Button _setDirectTransport;
+        [SerializeField] private Toggle _useCreateAllocToggle;
+        [SerializeField] private Toggle _useJoinAllocToggle;
+        [SerializeField] private TMP_InputField _connectionTypeInput;
+        [SerializeField] private Button _setServerRelayTransport;
         [SerializeField] private Button _startServerBtn;
         [SerializeField] private Button _startHostBtn;
         [SerializeField] private Button _startClientBtn;
@@ -22,6 +32,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
         [SerializeField] private CanvasGroup _authGroup;
         [SerializeField] private Toggle _authoritativeMovements;
         [SerializeField] private Toggle _authoritativeBullets;
+        UnityTransport _transport;
 
         private static NetworkPanel _instance;
         public static NetworkPanel Instance { get => _instance; }
@@ -32,6 +43,8 @@ namespace KevinCastejon.MultiplayerAPIExplorer
         {
             base.Awake();
             _instance = this;
+            _setDirectTransport.onClick.AddListener(SetDirectTransport);
+            _setServerRelayTransport.onClick.AddListener(SetServerRelayTransport);
             _startServerBtn.onClick.AddListener(StartServer);
             _startHostBtn.onClick.AddListener(StartHost);
             _startClientBtn.onClick.AddListener(StartClient);
@@ -57,9 +70,52 @@ namespace KevinCastejon.MultiplayerAPIExplorer
                     }
                 }
             });
-            //_authoritativeBullets.onValueChanged.AddListener((bool value) => GameManager.authoritativeBullets.Value = value);
+        }
+        private void Start()
+        {
+            _transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+        }
+        private void SetDirectTransport()
+        {
+            StartWait();
+            Log("Setting direct transport...");
+            try
+            {
+                _transport.SetConnectionData(_IPInput.text.Length == 0 ? null : _IPInput.text, 7777, _IPListenInput.text.Length == 0 ? null : _IPListenInput.text);
+            }
+            catch (Exception e)
+            {
+                LogException(e);
+                Log("Setting direct transport failed.");
+                return;
+            }
+            finally
+            {
+                StopWait();
+            }
+            Log("Direct transport set.");
         }
 
+        private void SetServerRelayTransport()
+        {
+            StartWait();
+            Log("Setting relay transport...");
+            try
+            {
+                _transport.SetRelayServerData(_useCreateAllocToggle.isOn ? new RelayServerData(RelayPanel.Instance.CreateAlloc, _connectionTypeInput.text) : new RelayServerData(RelayPanel.Instance.JoinAlloc, _connectionTypeInput.text));
+            }
+            catch (Exception e)
+            {
+                LogException(e);
+                Log("Setting relay transport failed.");
+                return;
+            }
+            finally
+            {
+                StopWait();
+            }
+            Log("Relay transport set.");
+        }
         private void StartServer()
         {
             //_authGroup.interactable = false;

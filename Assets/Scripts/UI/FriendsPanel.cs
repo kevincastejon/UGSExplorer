@@ -44,7 +44,6 @@ namespace KevinCastejon.MultiplayerAPIExplorer
 
         protected override void Awake()
         {
-            base.Awake();
             _instance = this;
             _initBtn.onClick.AddListener(Initialize);
             _forceRefreshBtn.onClick.AddListener(ForceRefresh);
@@ -62,6 +61,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             _deleteBlockBtn.onClick.AddListener(DeleteBlock);
             _deleteRelationshipBtn.onClick.AddListener(DeleteRelationship);
             _sendMessageBtn.onClick.AddListener(SendMsg);
+            base.Awake();
         }
 
         private async void Initialize()
