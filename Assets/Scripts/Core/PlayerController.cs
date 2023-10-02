@@ -25,7 +25,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
             {
                 _color.Value = Random.ColorHSV(0, 1, 0, 1, 0, 1, 1, 1);
                 _sprite.color = _color.Value;
-                _serverAuthoritativeMovement.Value = NetworkPanel.Instance.AuthoritativeMovements;
+                _serverAuthoritativeMovement.Value = NetcodeForGameobjectsPanel.Instance.AuthoritativeMovements;
                 if (_serverAuthoritativeMovement.Value)
                 {
                     _clientPosition.OnValueChanged += (Vector2 prev, Vector2 next) => transform.position = next;

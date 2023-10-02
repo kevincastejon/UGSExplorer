@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace KevinCastejon.MultiplayerAPIExplorer
 {
-    public class NetworkPanel : UIPanel
+    public class NetcodeForGameobjectsPanel : UIPanel
     {
         [SerializeField] private PlayerController _playerPrefab;
         [SerializeField] private TMP_InputField _IPInput;
@@ -34,8 +34,8 @@ namespace KevinCastejon.MultiplayerAPIExplorer
         [SerializeField] private Toggle _authoritativeBullets;
         UnityTransport _transport;
 
-        private static NetworkPanel _instance;
-        public static NetworkPanel Instance { get => _instance; }
+        private static NetcodeForGameobjectsPanel _instance;
+        public static NetcodeForGameobjectsPanel Instance { get => _instance; }
         public bool AuthoritativeMovements { get => _authoritativeMovements.isOn; }
         public bool AuthoritativeBullets { get => _authoritativeBullets.isOn; }
 

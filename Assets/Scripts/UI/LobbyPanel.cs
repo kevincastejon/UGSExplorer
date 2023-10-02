@@ -1,11 +1,8 @@
-using KevinCastejon.MultiplayerAPIExplorer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.Netcode;
 using Unity.Services.Authentication;
-using Unity.Services.CloudCode;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
@@ -161,7 +158,7 @@ namespace KevinCastejon.MultiplayerAPIExplorer
                 StopWait();
             }
             Log("Lobby updated.");
-            LogLobby(lobby); 
+            LogLobby(lobby);
         }
         private void Delete()
         {
