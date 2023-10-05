@@ -1,2 +1,2 @@
-# UnityMultiplayerAPIExplorer
- Explore the Unity Multiplayer APIs exposed through UIs
+# UnityGamingServicesAPIExplorer
+ Explore the Unity Gaming Services APIs exposed through UIs
