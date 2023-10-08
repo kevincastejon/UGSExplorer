@@ -150,6 +150,13 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.mobile.android-logcat": {
+      "version": "1.3.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.multiplayer.playmode": {
       "version": "0.1.1",
       "depth": 0,
@@ -310,13 +317,6 @@
         "com.unity.services.authentication": "2.5.0",
         "com.unity.services.core": "1.9.0"
       },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.services.levelplay": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.services.lobby": {
