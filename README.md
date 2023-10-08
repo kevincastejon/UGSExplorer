@@ -1,2 +1,2 @@
-# UnityGamingServicesAPIExplorer
+# UnityGamingServices Explorer
  Explore the Unity Gaming Services APIs exposed through UIs
