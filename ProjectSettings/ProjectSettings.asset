@@ -888,10 +888,10 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 88b99a98-e9f9-4815-8c46-5bab17cae8c0
+  cloudProjectId: 86a04000-c57b-46c0-8c08-d8a00182698e
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Test3
+  projectName: UGSExplorer
   organizationId: kevincastejon
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
