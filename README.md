@@ -15,7 +15,7 @@
 		- **Friends**
 			- **Setup Guide** : Follow the steps until you can toggle on the Friends service
 - Install Unity packages:
-	- Go to **Windows** > *Package Manager** > Install the following packages via the + > 'Install package by name' menus and buttons
+	- Go to **Windows** > **Package Manager** > Install the following packages via the + > 'Install package by name' menus and buttons
 		- com.unity.services.analytics
 		- com.unity.services.cloudcode
 		- com.unity.services.cloudsave
